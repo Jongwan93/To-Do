@@ -10,17 +10,20 @@ import {
   Keyboard,
 } from 'react-native';
 
-function AddTodo() {
+function AddTodo({onInsert}) {
   const [text, setText] = useState('');
   const button = (
     <View style={styles.buttonStyle}>
       <Image source={require('../assets/icons/add_white/add_white.png')} />
     </View>
   );
+
   const onPress = () => {
+    onInsert(text);
     setText('');
     Keyboard.dismiss();
   };
+
 
   return (
     <View style={styles.block}>

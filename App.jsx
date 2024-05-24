@@ -1,10 +1,12 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from 'react';
 import {StyleSheet, KeyboardAvoidingView, Platform} from 'react-native';
-import DateHead from './components/DateHead';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
+
+import DateHead from './components/DateHead';
 import AddTodo from './components/AddTodo';
 import Empty from './components/NothingToDo';
 import TodoList from './components/TodoList';
+import todosStorage from './storages/todosStorage';
 
 function App() {
   const today = new Date();
@@ -14,7 +16,15 @@ function App() {
     {id: 2, text: 'study react-native', done: false},
     {id: 3, text: 'lets make a todo list', done: false},
   ]);
-  
+
+  useEffect(() => {
+    todosStorage.get().then(setTodos).catch(console.error);
+  }, []);
+
+  useEffect(() => {
+    todosStorage.set(todos).catch(console.error);
+  }, [todos]);
+
   const onInsert = text => {
     // get id for new registration
     // find biggest id from the existing list and add 1
@@ -52,7 +62,7 @@ function App() {
           {todos.length === 0 ? (
             <Empty />
           ) : (
-            <TodoList todos={todos} onToggle={onToggle} onRemove={onRemove}/>
+            <TodoList todos={todos} onToggle={onToggle} onRemove={onRemove} />
           )}
           <AddTodo onInsert={onInsert} />
         </KeyboardAvoidingView>
